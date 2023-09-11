@@ -6,6 +6,7 @@ import org.apache.http.util.EntityUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+
 public class FinancialDataRetriever {
     private static final String XPLAN_API_URL = "https://londonwall.xplan.iress.co.uk/resourceful/entity/client-v4";
 //To do add correct URL, make sure that it works with 2FA
@@ -21,7 +22,7 @@ public class FinancialDataRetriever {
             ObjectMapper objectMapper = new ObjectMapper();
             return objectMapper.readTree(jsonResponse);
         } else {
-            throw new Exception("Failed to fetch financial data from Xplan API.");
+            throw new Exception("Failed to fetch financial data from XPLAN API.");
         }
     }
 }
