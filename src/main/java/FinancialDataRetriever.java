@@ -1,14 +1,21 @@
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.Base64;
 
 
 public class FinancialDataRetriever {
-    private static final String XPLAN_API_URL = "https://londonwall.xplan.iress.co.uk/resourceful/entity/client-v4";
+    private static final String XPLAN_API_URL = "https://londonwall.xplan.iress.co.uk/resourceful/";
+
+    String apiKey = "pGQsWd3FYdyJOnyno5Ng";
+    String username = "APIUser";
+    String password = "WelcomeBack!1";
+    String credentials = Base64.getEncoder().encodeToString("{username}:{password}".getBytes());
 //To do add correct URL, make sure that it works with 2FA
 
     public static JsonNode fetchFinancialData() throws Exception {
