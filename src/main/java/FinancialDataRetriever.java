@@ -15,7 +15,7 @@ public class FinancialDataRetriever {
     String apiKey = "pGQsWd3FYdyJOnyno5Ng";
     String username = "APIUser";
     String password = "WelcomeBack!1";
-    String credentials = Base64.getEncoder().encodeToString("{username}:{password}".getBytes());
+    String credentials = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
 //To do add correct URL, make sure that it works with 2FA
 
     public static JsonNode fetchFinancialData() throws Exception {
