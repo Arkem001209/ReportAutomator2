@@ -8,7 +8,7 @@ import org.apache.http.util.EntityUtils;
 
 
 public class FinancialDataRetriever {
-    private static final String XPLAN_API_URL = "https://your-xplan-api-url/financial-data-endpoint";
+    private static final String XPLAN_API_URL = "https://londonwall.xplan.iress.co.uk/resourceful";
     private static final String API_KEY = "pGQsWd3FYdyJOnyno5Ng";
     private static final String USERNAME = "APIUser";
     private static final String PASSWORD = "WelcomeBack!1";
