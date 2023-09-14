@@ -3,9 +3,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+
+import java.net.URI;
+import java.net.http.HttpRequest;
+import java.util.Base64;
 
 public class FinancialDataRetriever {
     private static final String XPLAN_API_URL = "https://londonwall.xplan.iress.co.uk/resourceful";
@@ -13,23 +17,30 @@ public class FinancialDataRetriever {
     private static final String USERNAME = "APIUser";
     private static final String PASSWORD = "WelcomeBack!1";
 
+    private static String getBasicAuthenticationHeader(String username, String password) {
+        String valueToEncode = username + ":" + password;
+        return "Basic " + Base64.getEncoder().encodeToString(valueToEncode.getBytes());
+    }
     public static JsonNode fetchFinancialData() throws Exception {
         RequestConfig requestConfig = RequestConfig.custom()
                 .setCookieSpec("ignore")
                 .build();
 
-        HttpClient httpClient = HttpClients.custom()
+        HttpClient httpClient;
+        httpClient = HttpClients.custom()
                 .setDefaultRequestConfig(requestConfig)
                 .build();
 
-        HttpGet request = new HttpGet(XPLAN_API_URL);
 
-        // Add headers for authorization
-        request.addHeader("Authorization", "Basic " + API_KEY);
-        request.addHeader("X-Username", USERNAME);
-        request.addHeader("X-Password", PASSWORD);
 
-        HttpResponse response = httpClient.execute(request);
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .uri(new URI(XPLAN_API_URL))
+                .header("Authorization", getBasicAuthenticationHeader(USERNAME, PASSWORD))
+                .build();
+
+        HttpResponse response;
+        response = httpClient.execute((HttpUriRequest) request);
 
         if (response.getStatusLine().getStatusCode() == 200) {
             String jsonResponse = EntityUtils.toString(response.getEntity());
