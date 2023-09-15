@@ -1,11 +1,9 @@
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URL;
+import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.Base64;
+
 
 public class FinancialDataRetriever {
     private static final String XPLAN_API_URL = "https://londonwall.xplan.iress.co.uk/resourceful";
@@ -17,43 +15,43 @@ public class FinancialDataRetriever {
         String valueToEncode = username + ":" + password;
         return "Basic " + Base64.getEncoder().encodeToString(valueToEncode.getBytes());
     }
-    public static JsonNode fetchFinancialData() throws Exception {
+    //public static JsonNode fetchFinancialData() throws Exception {
         // Create an HTTP URL connection
-        URL url = new URL(XPLAN_API_URL);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        //URL url = new URL(XPLAN_API_URL);
+        //HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
         // Disable cookie handling
-        connection.setRequestProperty("Cookie", "dummyCookie=1"); // Set a dummy cookie to disable automatic cookie handling
+        //connection.setRequestProperty("Cookie", "dummyCookie=1"); // Set a dummy cookie to disable automatic cookie handling
 
+        HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
                 .uri(new URI(XPLAN_API_URL))
                 .header("Authorization", getBasicAuthenticationHeader(USERNAME, PASSWORD))
                 .header("X-Username", USERNAME)
                 .header("X-Password", PASSWORD)
+                .header("Cookie", "dummyCookie=1")
                 .build();
-
         // Add headers for authorization
+        HttpResponse response = client.executor(request);
+        HttpEntity entity = response.getEntity();
 
-        int responseCode = connection.getResponseCode();
+        //if (responseCode == HttpURLConnection.HTTP_OK) {
+            //ObjectMapper objectMapper = new ObjectMapper();
+            //JsonNode jsonResponse = objectMapper.readTree(connection.getInputStream());
+            //return jsonResponse;
+        //} //else {
+            //throw new Exception("Failed to fetch financial data from XPLAN API. Response code: " + responseCode);
+       // }
 
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonResponse = objectMapper.readTree(connection.getInputStream());
-            return jsonResponse;
-        } else {
-            throw new Exception("Failed to fetch financial data from XPLAN API. Response code: " + responseCode);
-        }
-    }
-
-    public static void main(String[] args) {
-        try {
-            JsonNode financialData = fetchFinancialData();
+    //public static void main(String[] args) {
+        //try {
+            //JsonNode financialData = fetchFinancialData();
             // Process the retrieved financial data as needed
-            System.out.println(financialData);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-}
+            //System.out.println(financialData);
+        } //catch (Exception e) {
+           // e.printStackTrace();
+       // }
+   // }
+//}
 
