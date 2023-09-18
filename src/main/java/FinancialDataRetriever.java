@@ -1,8 +1,12 @@
+import org.json.JSONObject;
+
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Base64;
+
 
 
 public class FinancialDataRetriever {
@@ -24,17 +28,32 @@ public class FinancialDataRetriever {
         //connection.setRequestProperty("Cookie", "dummyCookie=1"); // Set a dummy cookie to disable automatic cookie handling
 
         HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .GET()
-                .uri(new URI(XPLAN_API_URL))
-                .header("Authorization", getBasicAuthenticationHeader(USERNAME, PASSWORD))
-                .header("X-Username", USERNAME)
-                .header("X-Password", PASSWORD)
-                .header("Cookie", "dummyCookie=1")
-                .build();
-        // Add headers for authorization
-        HttpResponse response = client.executor(request);
-        HttpEntity entity = response.getEntity();
+        HttpRequest request;
+
+    {
+        try {
+            request = HttpRequest.newBuilder()
+                    .GET()
+                    .uri(new URI(XPLAN_API_URL))
+                    .header("Authorization", getBasicAuthenticationHeader(USERNAME, PASSWORD))
+                    .header("X-Username", USERNAME)
+                    .header("X-Password", PASSWORD)
+                    .header("Cookie", "dummyCookie=1")
+                    .build();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    // Add headers for authorization
+
+    HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+    HttpEntity entity = response.notify();
+
+    if (entity != null) {
+        String financialData = EntityUtils.toString(entity);
+        JSONObject json = new JSONObject(financialData);
+    }
+
 
         //if (responseCode == HttpURLConnection.HTTP_OK) {
             //ObjectMapper objectMapper = new ObjectMapper();
@@ -51,7 +70,7 @@ public class FinancialDataRetriever {
             //System.out.println(financialData);
         } //catch (Exception e) {
            // e.printStackTrace();
-       // }
-   // }
+      // }
+  // }
 //}
 
