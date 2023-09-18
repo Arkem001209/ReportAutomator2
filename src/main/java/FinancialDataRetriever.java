@@ -1,3 +1,4 @@
+import com.fasterxml.jackson.databind.JsonNode;
 import org.json.JSONObject;
 
 import java.net.URI;
@@ -26,7 +27,7 @@ public class FinancialDataRetriever {
 
         // Disable cookie handling
         //connection.setRequestProperty("Cookie", "dummyCookie=1"); // Set a dummy cookie to disable automatic cookie handling
-
+        static JsonNode fetchFinancialData() throws Exception {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request;
 
@@ -45,13 +46,15 @@ public class FinancialDataRetriever {
         }
     }
     // Add headers for authorization
-
     HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
     HttpEntity entity = response.notify();
 
     if (entity != null) {
         String financialData = EntityUtils.toString(entity);
         JSONObject json = new JSONObject(financialData);
+    }
+
+    return response.body();
     }
 
 
