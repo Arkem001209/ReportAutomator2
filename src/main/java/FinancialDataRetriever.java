@@ -43,6 +43,7 @@ public class FinancialDataRetriever {
 
 
     int responseCode = response.statusCode();
+        System.out.println(responseCode);
 
     if (responseCode == 200) {
         String jsonResponse = response.body();
