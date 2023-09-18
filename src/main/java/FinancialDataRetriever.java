@@ -1,8 +1,6 @@
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.JSONObject;
 
-import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
@@ -42,18 +40,19 @@ public class FinancialDataRetriever {
 
     // Add headers for authorization
     HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-    HttpEntity entity = response.notify();
+
 
     int responseCode = response.statusCode();
 
-    if (responseCode == HttpURLConnection.HTTP_OK) {
+    if (responseCode == 200) {
+        String jsonResponse = response.body();
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonResponse = objectMapper.readTree(response.getInputStream());
+        //JsonNode jsonResponse = objectMapper.readTree(response.getInputStream());
+        return objectMapper.readTree(jsonResponse);
 
+    } else {
+        throw new Exception("Failed to fetch financial data from XPLAN");
     }
-            return jsonResponse;
-    }
-
-}
+}}
 
 
