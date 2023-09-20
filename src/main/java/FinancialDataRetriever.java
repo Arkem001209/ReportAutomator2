@@ -29,7 +29,8 @@ public class FinancialDataRetriever {
         request = HttpRequest.newBuilder()
                 .GET()
                 .uri(new URI(XPLAN_API_URL))
-                .header("Authorization", getBasicAuthenticationHeader(USERNAME, PASSWORD))
+                //.header("Authorization", getBasicAuthenticationHeader(USERNAME, PASSWORD))
+                .header("Authorization", "Basic " + API_KEY)
                 .header("X-Username", USERNAME)
                 .header("X-Password", PASSWORD)
                 .header("Cookie", "dummyCookie=1")
@@ -53,7 +54,8 @@ public class FinancialDataRetriever {
 
     } else {
         throw new Exception("Failed to fetch financial data from XPLAN");
+        }
     }
-}}
+}
 
 
